@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Rosco Estudio — Arquitectura, render y proyecto en Ciudad de México</title>
+<meta name="description" content="Rosco Estudio: visualización arquitectónica, planos, conceptualización y recorridos virtuales en Ciudad de México. Ayudamos a ver el proyecto antes de construirlo.">
+<meta name="theme-color" content="#F4F0E6">
+<meta property="og:title" content="Rosco Estudio — Arquitectura y visualización">
+<meta property="og:description" content="Renderizado, planos, conceptualización y recorridos virtuales en Ciudad de México.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_MX">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://roscoestudio.com/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,400;1,9..144,500&family=Jost:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#C7C0AC;
+  --cream-2:#B9B19A;
+  --ink:#221F18;
+  --ink-soft:#4A4436;
+  --brass:#8A6A3E;
+  --brass-soft:#A98F62;
+  --line:#A79C82;
+  --white:#F7F4EC;
+  --dark-bg:#221F18;
+  --dark-text:#F4F0E6;
+  --dark-text-soft:#9C9586;
+  --r:0px;
+  --maxw:1180px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+  --dur:.7s;
+  --font-scale:1;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  background:var(--cream);
+  color:var(--ink);
+  font-family:'Inter',-apple-system,sans-serif;
+  font-size:calc(var(--font-scale) * 16px);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  transition:background .4s var(--ease);
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;background:none;border:none;color:inherit}
+ul{list-style:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+@media(min-width:780px){.wrap{padding:0 56px}}
+
+:focus-visible{outline:2px solid var(--brass);outline-offset:3px}
+
+.eyebrow{
+  font-family:'Jost',sans-serif;
+  font-size:11px;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--brass);
+  font-weight:500;
+}
+h1,h2,h3{font-weight:400;color:var(--ink)}
+.serif{font-family:'Fraunces',serif}
+.hr{height:1px;background:var(--line);border:none}
+
+/* reveal-on-scroll */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity var(--dur) var(--ease),transform var(--dur) var(--ease)}
+.reveal.in{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+
+/* ---------- SKIP LINK ---------- */
+.skip{position:absolute;left:-999px;top:0;background:var(--ink);color:var(--cream);padding:12px 20px;z-index:999;font-family:'Jost',sans-serif;letter-spacing:.05em}
+.skip:focus{left:16px;top:16px}
+
+/* ---------- MARK (logo icon) ---------- */
+.mark{display:block}
+.mark path,.mark line{stroke:currentColor;stroke-width:5;fill:none;stroke-linecap:square}
+.mark .arc{stroke-dasharray:160;stroke-dashoffset:160;transition:stroke-dashoffset 1.4s var(--ease)}
+.mark.draw .arc{stroke-dashoffset:0}
+
+/* ---------- HEADER ---------- */
+header{
+  position:sticky;top:0;z-index:60;
+  background:rgba(244,240,230,.86);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;height:76px}
+.brand-lockup{display:flex;align-items:center;gap:12px}
+.brand-lockup .mark{width:28px;height:28px;color:var(--ink)}
+.brand-name{font-family:'Jost',sans-serif;font-size:16px;letter-spacing:.24em;font-weight:500}
+.brand-name small{display:block;font-size:9px;letter-spacing:.3em;color:var(--ink-soft);font-weight:400;margin-top:2px}
+
+.nav-links{display:none;gap:36px;font-family:'Jost',sans-serif;font-size:13px;letter-spacing:.08em}
+.nav-links a{position:relative;padding:4px 0}
+.nav-links a::after{content:'';position:absolute;left:0;right:100%;bottom:0;height:1px;background:var(--brass);transition:right .35s var(--ease)}
+.nav-links a:hover::after,.nav-links a:focus-visible::after{right:0}
+@media(min-width:900px){.nav-links{display:flex}}
+
+.menu-btn{display:flex;flex-direction:column;gap:5px;width:30px;z-index:120}
+@media(min-width:900px){.menu-btn{display:none}}
+.menu-btn span{display:block;height:1px;background:var(--ink);transition:transform .3s var(--ease),opacity .3s var(--ease)}
+.menu-btn.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.menu-btn.open span:nth-child(2){opacity:0}
+.menu-btn.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+
+.mobile-menu{
+  position:fixed;inset:0;background:var(--cream);z-index:100;
+  display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:28px;
+  padding:24px;
+  transform:translateY(-100%);transition:transform .5s var(--ease);
+}
+.mobile-menu.open{transform:translateY(0)}
+.mobile-menu a{font-family:'Fraunces',serif;font-style:italic;font-size:38px;font-weight:400}
+.mobile-menu .wrap{width:100%}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;min-height:92vh;display:flex;flex-direction:column;justify-content:flex-end;padding-top:76px}
+.hero-media{position:absolute;inset:0;overflow:hidden}
+.hero-media img{width:100%;height:100%;object-fit:cover;transform:scale(1.08);transition:transform 1.6s var(--ease)}
+.hero.loaded .hero-media img{transform:scale(1)}
+.hero-media::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,color-mix(in srgb,var(--ink) 5%,transparent) 0%,color-mix(in srgb,var(--ink) 55%,transparent) 100%)}
+.hero-content{position:relative;color:var(--white);padding:0 0 64px}
+.hero-content .eyebrow{color:var(--brass-soft)}
+.hero-title{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:calc(var(--font-scale) * clamp(34px,7.5vw,76px));line-height:1.06;letter-spacing:-.01em;max-width:14ch;margin:18px 0 22px}
+.hero-sub{font-family:'Jost',sans-serif;font-size:calc(var(--font-scale) * 13px);letter-spacing:.1em;max-width:40ch;color:#EDE7D8}
+.scroll-cue{position:absolute;bottom:24px;right:24px;color:var(--white);display:flex;flex-direction:column;align-items:center;gap:8px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:.2em}
+.scroll-cue .line{width:1px;height:36px;background:rgba(255,255,255,.6);overflow:hidden}
+.scroll-cue .line i{display:block;width:100%;height:50%;background:#fff;animation:cue 1.8s infinite var(--ease)}
+@keyframes cue{0%{transform:translateY(-100%)}100%{transform:translateY(200%)}}
+@media(prefers-reduced-motion:reduce){.scroll-cue .line i{animation:none}}
+
+/* ---------- SECTION SPACING ---------- */
+section{padding:96px 0}
+@media(min-width:900px){section{padding:140px 0}}
+.section-head{margin-bottom:48px}
+.section-head .eyebrow{margin-bottom:14px;display:block}
+.section-head h2{font-family:'Fraunces',serif;font-size:calc(var(--font-scale) * clamp(28px,4vw,44px));max-width:18ch}
+
+/* ---------- STATEMENT ---------- */
+.statement{text-align:left}
+.statement p{font-family:'Fraunces',serif;font-size:calc(var(--font-scale) * clamp(22px,3.4vw,36px));line-height:1.35;max-width:20ch;color:var(--ink)}
+.statement .accent{color:var(--brass)}
+
+/* ---------- SERVICIOS ---------- */
+.service-row{
+  display:grid;grid-template-columns:1fr;gap:14px;
+  padding:28px 0;border-top:1px solid var(--line);
+  transition:padding .4s var(--ease);
+}
+.servicios .service-row:last-child{border-bottom:1px solid var(--line)}
+@media(min-width:780px){
+  .service-row{grid-template-columns:90px 1fr 1.1fr;align-items:start;gap:24px}
+}
+.service-num{font-family:'Jost',sans-serif;font-size:12px;letter-spacing:.1em;color:var(--brass)}
+.service-row h3{font-family:'Fraunces',serif;font-size:calc(var(--font-scale) * clamp(22px,3vw,30px))}
+.service-row p{color:var(--ink-soft);font-size:calc(var(--font-scale) * 15px);max-width:46ch}
+.service-row:hover{background:linear-gradient(90deg,var(--cream-2),transparent 80%)}
+
+/* ---------- PROYECTOS ---------- */
+.project-grid{display:grid;grid-template-columns:1fr;gap:48px}
+@media(min-width:780px){.project-grid{grid-template-columns:1fr 1fr;gap:32px 28px}}
+.project-card{cursor:pointer;border:none;background:none;text-align:left;width:100%;font:inherit;color:inherit}
+.project-thumb{position:relative;overflow:hidden;aspect-ratio:4/5;background:var(--cream-2)}
+.project-thumb img{width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease)}
+.project-card:hover .project-thumb img,.project-card:focus-visible .project-thumb img{transform:scale(1.06)}
+.project-thumb .mark{position:absolute;top:18px;right:18px;width:26px;height:26px;color:var(--white);opacity:0;transition:opacity .4s var(--ease)}
+.project-card:hover .project-thumb .mark,.project-card:focus-visible .project-thumb .mark{opacity:1}
+.project-meta{display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;gap:12px}
+.project-meta h3{font-family:'Fraunces',serif;font-size:calc(var(--font-scale) * 22px)}
+.project-meta span{font-family:'Jost',sans-serif;font-size:calc(var(--font-scale) * 11px);letter-spacing:.12em;color:var(--ink-soft);text-transform:uppercase;white-space:nowrap}
+
+/* ---------- ESTUDIO ---------- */
+.estudio-grid{display:grid;grid-template-columns:1fr;gap:40px;align-items:center}
+@media(min-width:900px){.estudio-grid{grid-template-columns:1fr 1fr;gap:80px}}
+.estudio-img{aspect-ratio:3/4;overflow:hidden;background:var(--cream-2)}
+.estudio-img img{width:100%;height:100%;object-fit:cover}
+.estudio-text p{color:var(--ink-soft);margin-bottom:18px;max-width:48ch}
+.estudio-text p:first-of-type{font-family:'Fraunces',serif;font-size:calc(var(--font-scale) * 22px);color:var(--ink)}
+
+/* ---------- CONTACTO ---------- */
+.contacto{background:var(--dark-bg);color:var(--dark-text)}
+.contacto .eyebrow{color:var(--brass-soft)}
+.contacto h2{color:var(--dark-text)}
+.contact-grid{display:grid;grid-template-columns:1fr;gap:48px}
+@media(min-width:900px){.contact-grid{grid-template-columns:1fr 1fr;gap:80px}}
+.contact-list a, .contact-list span{display:block;font-family:'Fraunces',serif;font-style:italic;font-size:calc(var(--font-scale) * clamp(20px,3vw,28px));padding:14px 0;border-bottom:1px solid color-mix(in srgb,var(--dark-text) 18%,transparent)}
+.contact-list a{transition:color .3s var(--ease)}
+.contact-list a:hover,.contact-list a:focus-visible{color:var(--brass-soft)}
+.contact-list .label{font-family:'Jost',sans-serif;font-style:normal;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dark-text-soft);display:block;margin-bottom:4px;border:none;padding:0}
+
+.form-field{margin-bottom:20px}
+.form-field label{display:block;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--dark-text-soft);margin-bottom:8px}
+.form-field input,.form-field textarea{
+  width:100%;background:transparent;border:none;border-bottom:1px solid color-mix(in srgb,var(--dark-text) 30%,transparent);
+  color:var(--dark-text);font-family:'Inter',sans-serif;font-size:16px;padding:10px 0;resize:vertical;
+}
+.form-field input:focus,.form-field textarea:focus{outline:none;border-color:var(--brass-soft)}
+.form-field input::placeholder,.form-field textarea::placeholder{color:var(--dark-text-soft)}
+.btn-send{
+  margin-top:8px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  padding:16px 32px;border:1px solid var(--brass-soft);color:var(--dark-text);
+  transition:background .3s var(--ease),color .3s var(--ease);
+}
+.btn-send:hover,.btn-send:focus-visible{background:var(--brass-soft);color:var(--dark-bg)}
+
+/* ---------- FOOTER ---------- */
+footer{padding:36px 0;background:var(--dark-bg);color:var(--dark-text-soft)}
+.foot-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.08em}
+.foot-row .mark{width:18px;height:18px;color:var(--dark-text-soft)}
+.admin-trigger{color:color-mix(in srgb,var(--dark-text-soft) 70%,transparent);font-size:10px}
+.admin-trigger:hover{color:var(--brass-soft)}
+
+/* ---------- LIGHTBOX ---------- */
+.lightbox{position:fixed;inset:0;background:color-mix(in srgb,var(--dark-bg) 92%,transparent);z-index:200;display:none;overflow-y:auto;padding:24px 0 80px}
+.lightbox.open{display:block}
+.lb-close{position:fixed;top:20px;right:20px;color:var(--dark-text);width:42px;height:42px;border:1px solid color-mix(in srgb,var(--dark-text) 30%,transparent);display:flex;align-items:center;justify-content:center;font-size:20px;z-index:5;background:color-mix(in srgb,var(--dark-bg) 60%,transparent)}
+.lb-inner{max-width:880px;margin:0 auto;padding:0 24px}
+.lb-cover{aspect-ratio:16/10;overflow:hidden;margin-bottom:32px;background:var(--cream-2)}
+.lb-cover img{width:100%;height:100%;object-fit:cover}
+.lb-inner .eyebrow{color:var(--brass-soft)}
+.lb-inner h2{font-family:'Fraunces',serif;font-style:italic;color:var(--dark-text);font-size:clamp(28px,5vw,48px);margin:14px 0 22px}
+.lb-inner p{color:var(--dark-text-soft);max-width:60ch;margin-bottom:24px;font-size:16px;line-height:1.7}
+.lb-gallery{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:32px}
+.lb-gallery img{width:100%;aspect-ratio:1/1;object-fit:cover}
+
+/* ---------- ADMIN PANEL ---------- */
+.admin-panel{position:fixed;inset:0;background:var(--cream);z-index:300;display:none;overflow-y:auto}
+.admin-panel.open{display:block}
+.admin-bar{position:sticky;top:0;background:var(--dark-bg);color:var(--dark-text);padding:18px 24px;display:flex;justify-content:space-between;align-items:center;z-index:5}
+.admin-bar h2{font-family:'Jost',sans-serif;font-size:14px;letter-spacing:.1em;color:var(--dark-text)}
+.admin-bar button{font-family:'Jost',sans-serif;font-size:12px;letter-spacing:.08em;border:1px solid color-mix(in srgb,var(--dark-text) 30%,transparent);padding:8px 16px;color:var(--dark-text)}
+.admin-tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin:24px 24px 0}
+.admin-tab{padding:12px 18px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border-bottom:2px solid transparent;color:var(--ink-soft)}
+.admin-tab.active{color:var(--ink);border-color:var(--brass)}
+.admin-body{padding:24px;max-width:760px;margin:0 auto}
+.admin-section{display:none}
+.admin-section.active{display:block}
+.afield{margin-bottom:18px}
+.afield label{display:block;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px}
+.afield input,.afield textarea{width:100%;border:1px solid var(--line);background:var(--white);padding:10px 12px;font-family:'Inter',sans-serif;font-size:14px}
+.afield textarea{resize:vertical;min-height:80px}
+.afield small{display:block;color:var(--ink-soft);font-size:12px;margin-top:5px}
+.abtn{font-family:'Jost',sans-serif;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:12px 22px;border:1px solid var(--ink);margin-right:10px;margin-top:6px;display:inline-block}
+.abtn.primary{background:var(--ink);color:var(--cream)}
+.abtn.danger{border-color:#9B4A3C;color:#9B4A3C}
+.admin-card{border:1px solid var(--line);padding:18px;margin-bottom:16px;background:var(--white)}
+.admin-card h4{font-family:'Fraunces',serif;font-size:18px;margin-bottom:4px}
+.admin-card .meta{font-size:12px;color:var(--ink-soft);margin-bottom:10px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--cream);padding:14px 24px;font-family:'Jost',sans-serif;font-size:13px;letter-spacing:.04em;z-index:400;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* ---------- POSITION MODE ---------- */
+[data-draggable]{transition:outline-color .2s}
+body.position-mode [data-draggable]{cursor:grab;outline:1px dashed transparent;outline-offset:6px;border-radius:2px}
+body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
+[data-draggable].dragging{cursor:grabbing;outline-color:var(--brass) !important;opacity:.88;position:relative;z-index:80}
+.pos-bar{
+  position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(120%);
+  background:var(--dark-bg);color:var(--dark-text);display:flex;align-items:center;gap:16px;
+  padding:12px 18px;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:.04em;
+  z-index:150;transition:transform .35s var(--ease);max-width:92vw;flex-wrap:wrap;justify-content:center;
+  border:1px solid color-mix(in srgb,var(--dark-text) 20%,transparent);
+}
+.pos-bar.show{transform:translateX(-50%) translateY(0)}
+.pos-bar button{border:1px solid color-mix(in srgb,var(--dark-text) 30%,transparent);padding:7px 14px;color:var(--dark-text);font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.04em;white-space:nowrap}
+.pos-bar button:hover{border-color:var(--brass-soft);color:var(--brass-soft)}
+</style>
+</head>
+<body>
+
+<a href="#main" class="skip">Saltar al contenido</a>
+
+<svg width="0" height="0" style="position:absolute">
+  <symbol id="mark-svg" viewBox="0 0 100 100">
+    <line x1="22" y1="18" x2="22" y2="78"/>
+    <line x1="38" y1="18" x2="80" y2="18"/>
+    <line x1="22" y1="82" x2="68" y2="82"/>
+    <line x1="80" y1="30" x2="80" y2="82"/>
+    <path class="arc" d="M22,82 C22,50 50,22 80,22" />
+  </symbol>
+</svg>
+
+<header>
+  <nav class="nav wrap" aria-label="Principal">
+    <a href="#main" class="brand-lockup" aria-label="Rosco Estudio, inicio">
+      <svg class="mark"><use href="#mark-svg"/></svg>
+      <span class="brand-name">ROSCO<small>ESTUDIO</small></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#proyectos">Proyectos</a></li>
+      <li><a href="#estudio">Estudio</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="wrap">
+    <a href="#servicios" data-close>Servicios</a><br><br>
+    <a href="#proyectos" data-close>Proyectos</a><br><br>
+    <a href="#estudio" data-close>Estudio</a><br><br>
+    <a href="#contacto" data-close>Contacto</a>
+  </div>
+</div>
+
+<main id="main">
+
+  <section class="hero" id="hero">
+    <div class="hero-media">
+      <img id="heroImg" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1800&auto=format&fit=crop" alt="Interior arquitectónico minimalista con luz natural, render fotorrealista de Rosco Estudio">
+    </div>
+    <div class="wrap hero-content">
+      <span class="eyebrow" id="heroEyebrow">Rosco Estudio — Ciudad de México</span>
+      <h1 class="hero-title" id="heroTitle">El espacio, visible antes de construirlo.</h1>
+      <p class="hero-sub" id="heroSub">RENDERIZADO · PLANOS · CONCEPTUALIZACIÓN · RECORRIDOS VIRTUALES</p>
+    </div>
+    <div class="scroll-cue" aria-hidden="true"><span>SCROLL</span><span class="line"><i></i></span></div>
+  </section>
+
+  <section class="statement wrap reveal">
+    <p id="statementText">No vendemos imágenes bonitas. <span class="accent">Ayudamos a decidir.</span> Cada render, plano y recorrido existe para que veas tu proyecto antes de construirlo.</p>
+  </section>
+
+  <section id="servicios" class="servicios wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" id="servEyebrow">Servicios</span>
+      <h2 id="servHeading">Lo que hacemos, de la idea al anteproyecto completo</h2>
+    </div>
+    <div id="serviceList"></div>
+  </section>
+
+  <section id="proyectos" class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" id="projEyebrow">Proyectos</span>
+      <h2 id="projHeading">Una selección, no un catálogo</h2>
+    </div>
+    <div class="project-grid" id="projectGrid"></div>
+  </section>
+
+  <section id="estudio" class="wrap">
+    <div class="estudio-grid reveal">
+      <div class="estudio-img">
+        <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?q=80&w=1200&auto=format&fit=crop" alt="Mesa de trabajo de arquitecto con planos y maqueta, estudio de diseño">
+      </div>
+      <div class="estudio-text">
+        <span class="eyebrow" id="estudioEyebrow">Estudio</span>
+        <div id="estudioText" style="margin-top:16px"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto" class="contacto">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow" id="contactEyebrow">Contacto</span>
+        <h2 id="contactHeading">Hablemos de tu proyecto</h2>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-list reveal">
+          <span class="label">Correo</span>
+          <a href="mailto:holaroscoestudio@gmail.com" id="contactEmailLink">holaroscoestudio@gmail.com</a>
+          <span class="label" style="margin-top:14px">Teléfono</span>
+          <a href="tel:+525526995348" id="contactPhoneLink">55 2699 5348</a>
+          <span class="label" style="margin-top:14px">Ubicación</span>
+          <span id="contactLocation">Ciudad de México, México</span>
+        </div>
+        <form class="reveal" id="contactForm" aria-label="Formulario de contacto">
+          <div class="form-field">
+            <label for="cf-name">Nombre</label>
+            <input id="cf-name" name="name" type="text" placeholder="Tu nombre" required autocomplete="name">
+          </div>
+          <div class="form-field">
+            <label for="cf-email">Correo</label>
+            <input id="cf-email" name="email" type="email" placeholder="tu@correo.com" required autocomplete="email">
+          </div>
+          <div class="form-field">
+            <label for="cf-msg">Cuéntame del proyecto</label>
+            <textarea id="cf-msg" name="message" rows="4" placeholder="Tipo de proyecto, ubicación, etapa actual…" required></textarea>
+          </div>
+          <button type="submit" class="btn-send">Enviar mensaje</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-row">
+    <svg class="mark"><use href="#mark-svg"/></svg>
+    <span>© <span id="year"></span> <span id="footerLine">ROSCO ESTUDIO — ARQUITECTURA · DISEÑO · VISUALIZACIÓN</span></span>
+    <span style="display:flex;gap:16px">
+      <button class="admin-trigger" id="positionTrigger">Mover textos</button>
+      <button class="admin-trigger" id="adminTrigger" aria-haspopup="dialog">Editar contenido</button>
+    </span>
+  </div>
+</footer>
+
+<div class="pos-bar" id="posBar" role="status">
+  <span>Modo mover — arrastra cualquier texto marcado con borde punteado</span>
+  <button id="resetPositions">Restablecer posiciones</button>
+  <button id="exitPositionMode">Salir</button>
+</div>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Detalle de proyecto">
+  <button class="lb-close" id="lbClose" aria-label="Cerrar">✕</button>
+  <div class="lb-inner" id="lbContent"></div>
+</div>
+
+<div class="admin-panel" id="adminPanel" role="dialog" aria-modal="true" aria-label="Panel de edición de contenido">
+  <div class="admin-bar">
+    <h2>Editar contenido — Rosco Estudio</h2>
+    <button id="adminClose">Cerrar</button>
+  </div>
+  <div class="admin-tabs">
+    <button class="admin-tab active" data-tab="textos">Textos</button>
+    <button class="admin-tab" data-tab="proyectos">Proyectos</button>
+    <button class="admin-tab" data-tab="diseno">Diseño</button>
+    <button class="admin-tab" data-tab="ayuda">Ayuda</button>
+  </div>
+  <div class="admin-body">
+
+    <div class="admin-section" id="tab-diseno">
+      <p style="color:var(--ink-soft);font-size:13px;margin-bottom:20px;max-width:56ch">Cada color se controla por separado — nada se calcula automáticamente. Los cambios se ven al instante; usa "Guardar diseño" para conservarlos.</p>
+
+      <p class="eyebrow" style="display:block;margin:20px 0 10px">Secciones claras</p>
+      <div class="afield"><label>Fondo general</label><input type="color" id="d-bg" style="height:44px;padding:4px;cursor:pointer"></div>
+      <div class="afield"><label>Fondo secundario (tarjetas, imágenes vacías)</label><input type="color" id="d-bg2" style="height:44px;padding:4px;cursor:pointer"></div>
+      <div class="afield"><label>Texto principal</label><input type="color" id="d-text" style="height:44px;padding:4px;cursor:pointer"></div>
+      <div class="afield"><label>Texto secundario</label><input type="color" id="d-textsoft" style="height:44px;padding:4px;cursor:pointer"></div>
+      <div class="afield"><label>Líneas y bordes</label><input type="color" id="d-line" style="height:44px;padding:4px;cursor:pointer"></div>
+
+      <p class="eyebrow" style="display:block;margin:28px 0 10px">Acento</p>
+      <div class="afield"><label>Acento principal (marca, subrayados, cifras)</label><input type="color" id="d-brass" style="height:44px;padding:4px;cursor:pointer"></div>
+      <div class="afield"><label>Acento claro (hover, botones)</label><input type="color" id="d-brasssoft" style="height:44px;padding:4px;cursor:pointer"></div>
+
+      <p class="eyebrow" style="display:block;margin:28px 0 10px">Secciones oscuras (contacto, pie de página)</p>
+      <div class="afield"><label>Fondo oscuro</label><input type="color" id="d-darkbg" style="height:44px;padding:4px;cursor:pointer"></div>
+      <div class="afield"><label>Texto sobre fondo oscuro</label><input type="color" id="d-darktext" style="height:44px;padding:4px;cursor:pointer"></div>
+      <div class="afield"><label>Texto secundario sobre fondo oscuro</label><input type="color" id="d-darktextsoft" style="height:44px;padding:4px;cursor:pointer"></div>
+
+      <p class="eyebrow" style="display:block;margin:28px 0 10px">Tipografía</p>
+      <div class="afield">
+        <label>Tamaño de letra general — <span id="fontScaleOut">100%</span></label>
+        <input type="range" id="d-font" min="0.85" max="1.3" step="0.01" value="1" style="width:100%">
+      </div>
+
+      <button class="abtn primary" id="saveDiseno">Guardar diseño</button>
+      <button class="abtn" id="resetDiseno">Restablecer</button>
+    </div>
+
+    <div class="admin-section active" id="tab-textos">
+      <p class="eyebrow" style="display:block;margin-bottom:12px">Inicio</p>
+      <div class="afield"><label>Etiqueta superior (hero)</label><input id="f-heroEyebrow"></div>
+      <div class="afield"><label>Frase principal (hero)</label><textarea id="f-heroTitle"></textarea></div>
+      <div class="afield"><label>Línea de servicios (hero, debajo del título)</label><input id="f-heroSub"></div>
+      <div class="afield"><label>URL imagen de portada (hero)</label><input id="f-heroImg"><small>Pega un enlace directo a una imagen (jpg/png/webp), por ejemplo de Google Drive público o cualquier hosting de imágenes.</small></div>
+      <div class="afield"><label>Frase de manifiesto</label><textarea id="f-statement"></textarea></div>
+
+      <p class="eyebrow" style="display:block;margin:24px 0 12px">Servicios</p>
+      <div class="afield"><label>Etiqueta superior</label><input id="f-servEyebrow"></div>
+      <div class="afield"><label>Título de sección</label><input id="f-servHeading"></div>
+
+      <p class="eyebrow" style="display:block;margin:24px 0 12px">Proyectos</p>
+      <div class="afield"><label>Etiqueta superior</label><input id="f-projEyebrow"></div>
+      <div class="afield"><label>Título de sección</label><input id="f-projHeading"></div>
+
+      <p class="eyebrow" style="display:block;margin:24px 0 12px">Estudio</p>
+      <div class="afield"><label>Etiqueta superior</label><input id="f-estudioEyebrow"></div>
+      <div class="afield"><label>Texto del estudio (un párrafo por línea)</label><textarea id="f-estudio" style="min-height:140px"></textarea></div>
+
+      <p class="eyebrow" style="display:block;margin:24px 0 12px">Contacto</p>
+      <div class="afield"><label>Etiqueta superior</label><input id="f-contactEyebrow"></div>
+      <div class="afield"><label>Título de sección</label><input id="f-contactHeading"></div>
+      <div class="afield"><label>Correo</label><input id="f-contactEmail"></div>
+      <div class="afield"><label>Teléfono (con lada, solo números para el enlace)</label><input id="f-contactPhone"><small>Ejemplo: 5526995348 — se usará para el enlace de llamada.</small></div>
+      <div class="afield"><label>Teléfono (texto a mostrar)</label><input id="f-contactPhoneDisplay"></div>
+      <div class="afield"><label>Ubicación</label><input id="f-contactLocation"></div>
+
+      <p class="eyebrow" style="display:block;margin:24px 0 12px">Pie de página</p>
+      <div class="afield"><label>Línea de crédito</label><input id="f-footerLine"></div>
+
+      <button class="abtn primary" id="saveTextos">Guardar textos</button>
+    </div>
+
+    <div class="admin-section" id="tab-proyectos">
+      <div id="projectAdminList"></div>
+      <button class="abtn primary" id="addProject">+ Nuevo proyecto</button>
+    </div>
+
+    <div class="admin-section" id="tab-ayuda">
+      <h3 class="serif" style="font-size:20px;margin-bottom:12px">Cómo actualizar el sitio</h3>
+      <p style="margin-bottom:12px;color:var(--ink-soft);max-width:60ch">Este panel guarda los cambios directamente en tu cuenta. Solo tú los ves al editar; los visitantes ven la última versión guardada.</p>
+      <p style="margin-bottom:12px;color:var(--ink-soft);max-width:60ch"><strong>Imágenes:</strong> sube tus fotos o renders a un servicio de hosting (Google Drive con enlace público, Imgur, Cloudinary, etc.) y pega aquí el enlace directo a la imagen.</p>
+      <p style="color:var(--ink-soft);max-width:60ch"><strong>Proyectos:</strong> cada proyecto necesita un título, categoría, imagen de portada y descripción. La galería es opcional — pega varias URLs separadas por coma.</p>
+    </div>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  var DEFAULTS = {
+    heroEyebrow: "Rosco Estudio — Ciudad de México",
+    heroTitle: "El espacio, visible antes de construirlo.",
+    heroSub: "RENDERIZADO · PLANOS · CONCEPTUALIZACIÓN · RECORRIDOS VIRTUALES",
+    heroImg: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1800&auto=format&fit=crop",
+    statement: "No vendemos imágenes bonitas. Ayudamos a decidir. Cada render, plano y recorrido existe para que veas tu proyecto antes de construirlo.",
+    servEyebrow: "Servicios",
+    servHeading: "Lo que hacemos, de la idea al anteproyecto completo",
+    projEyebrow: "Proyectos",
+    projHeading: "Una selección, no un catálogo",
+    estudioEyebrow: "Estudio",
+    estudio: "Rosco Estudio es el estudio personal de Luis Roberto Málaga, arquitecto en Ciudad de México.\nTrabajo con modelado BIM, visualización fotorrealista y coordinación de proyecto, aplicados a vivienda residencial y hospitalidad de lujo.\nCada encargo se trata como un caso de estudio: pocos proyectos, mucho cuidado.",
+    contactEyebrow: "Contacto",
+    contactHeading: "Hablemos de tu proyecto",
+    contactEmail: "holaroscoestudio@gmail.com",
+    contactPhone: "5526995348",
+    contactPhoneDisplay: "55 2699 5348",
+    contactLocation: "Ciudad de México, México",
+    footerLine: "ROSCO ESTUDIO — ARQUITECTURA · DISEÑO · VISUALIZACIÓN",
+    positions: {},
+    design: {
+      bg:"#C7C0AC", bg2:"#B9B19A",
+      text:"#221F18", textSoft:"#4A4436", line:"#A79C82",
+      brass:"#8A6A3E", brassSoft:"#A98F62",
+      darkBg:"#221F18", darkText:"#F4F0E6", darkTextSoft:"#9C9586",
+      fontScale:1
+    },
+    services: [
+      {title:"Renderizado arquitectónico", desc:"Imágenes fotorrealistas que comunican materialidad, luz y atmósfera antes de la obra."},
+      {title:"Planos y documentación", desc:"Plantas, cortes y fachadas técnicas, listas para construcción o permisos."},
+      {title:"Conceptualización", desc:"Del programa arquitectónico a la primera idea espacial, con criterio y referencia."},
+      {title:"Recorridos virtuales", desc:"Experiencias 3D interactivas para caminar el proyecto antes de que exista."},
+      {title:"Anteproyecto integral", desc:"Acompañamiento desde el primer boceto hasta el set completo de planos y visualización."}
+    ],
+    projects: [
+      {
+        title:"Casa Sayavedra", category:"Residencial · Render", year:"2026",
+        cover:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1400&auto=format&fit=crop",
+        desc:"Ampliación residencial de tres niveles para una vivienda familiar, con bodega de vinos, sala de cata, jardín interior y biblioteca. Desarrollo completo de visualización fotorrealista para acompañar el proceso de obra.",
+        gallery:"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1000&auto=format&fit=crop,https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1000&auto=format&fit=crop"
+      },
+      {
+        title:"Loft Tlalpan", category:"Vivienda · Anteproyecto", year:"2025",
+        cover:"https://images.unsplash.com/photo-1556912173-3bb406ef7e77?q=80&w=1400&auto=format&fit=crop",
+        desc:"Conceptualización de un loft de un solo nivel, con doble altura y materialidad cruda — concreto aparente, madera y metal. Programa compacto resuelto en planta abierta.",
+        gallery:"https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?q=80&w=1000&auto=format&fit=crop,https://images.unsplash.com/photo-1600585152220-90363fe7e115?q=80&w=1000&auto=format&fit=crop"
+      },
+      {
+        title:"Residencia Lomas", category:"Hospitalidad · Recorrido virtual", year:"2025",
+        cover:"https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?q=80&w=1400&auto=format&fit=crop",
+        desc:"Recorrido virtual interactivo para una residencia de lujo, desarrollado para acompañar decisiones de diseño previas a obra junto al cliente y al equipo de interiorismo.",
+        gallery:"https://images.unsplash.com/photo-1600563438938-a42a4527cb45?q=80&w=1000&auto=format&fit=crop,https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=1000&auto=format&fit=crop"
+      }
+    ]
+  };
+
+  var state = null;
+
+  function uid(){ return 'p' + Date.now() + Math.floor(Math.random()*999); }
+
+  async function loadState(){
+    try{
+      var r = await window.storage.get('site-content', false);
+      if(r && r.value){ state = JSON.parse(r.value); }
+      else { state = JSON.parse(JSON.stringify(DEFAULTS)); }
+    }catch(e){
+      state = JSON.parse(JSON.stringify(DEFAULTS));
+    }
+    state.projects.forEach(function(p){ if(!p.id) p.id = uid(); });
+    state.design = Object.assign({}, DEFAULTS.design, state.design||{});
+    state.positions = Object.assign({}, state.positions||{});
+    applyDesign();
+    render();
+  }
+
+  function applyDesign(){
+    var d = state.design;
+    var root = document.documentElement.style;
+    root.setProperty('--cream', d.bg);
+    root.setProperty('--cream-2', d.bg2);
+    root.setProperty('--ink', d.text);
+    root.setProperty('--ink-soft', d.textSoft);
+    root.setProperty('--line', d.line);
+    root.setProperty('--brass', d.brass);
+    root.setProperty('--brass-soft', d.brassSoft);
+    root.setProperty('--dark-bg', d.darkBg);
+    root.setProperty('--dark-text', d.darkText);
+    root.setProperty('--dark-text-soft', d.darkTextSoft);
+    root.setProperty('--font-scale', d.fontScale);
+  }
+
+  async function saveState(msg){
+    try{
+      await window.storage.set('site-content', JSON.stringify(state), false);
+      toast(msg || 'Guardado');
+    }catch(e){
+      toast('No se pudo guardar. Intenta de nuevo.');
+    }
+  }
+
+  function toast(msg){
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._tm);
+    t._tm = setTimeout(function(){ t.classList.remove('show'); }, 2400);
+  }
+
+  function esc(s){
+    return (s||'').replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; });
+  }
+
+  function render(){
+    document.getElementById('heroEyebrow').textContent = state.heroEyebrow;
+    document.getElementById('heroTitle').textContent = state.heroTitle;
+    document.getElementById('heroSub').textContent = state.heroSub;
+    document.getElementById('heroImg').src = state.heroImg;
+    document.getElementById('statementText').innerHTML = esc(state.statement).replace(/(Ayudamos a decidir\.)/,'<span class="accent">$1</span>');
+
+    document.getElementById('servEyebrow').textContent = state.servEyebrow;
+    document.getElementById('servHeading').textContent = state.servHeading;
+    document.getElementById('projEyebrow').textContent = state.projEyebrow;
+    document.getElementById('projHeading').textContent = state.projHeading;
+    document.getElementById('estudioEyebrow').textContent = state.estudioEyebrow;
+    document.getElementById('estudioText').innerHTML = state.estudio.split('\n').filter(Boolean).map(function(p){return '<p>'+esc(p)+'</p>';}).join('');
+
+    document.getElementById('contactEyebrow').textContent = state.contactEyebrow;
+    document.getElementById('contactHeading').textContent = state.contactHeading;
+    var emailLink = document.getElementById('contactEmailLink');
+    emailLink.textContent = state.contactEmail;
+    emailLink.href = 'mailto:'+state.contactEmail;
+    var phoneLink = document.getElementById('contactPhoneLink');
+    phoneLink.textContent = state.contactPhoneDisplay;
+    phoneLink.href = 'tel:+52'+state.contactPhone.replace(/\D/g,'');
+    document.getElementById('contactLocation').textContent = state.contactLocation;
+    document.getElementById('footerLine').textContent = state.footerLine;
+
+    var sl = document.getElementById('serviceList');
+    sl.innerHTML = state.services.map(function(s,i){
+      return '<div class="service-row reveal"><span class="service-num">0'+(i+1)+'</span><h3>'+esc(s.title)+'</h3><p>'+esc(s.desc)+'</p></div>';
+    }).join('');
+
+    var pg = document.getElementById('projectGrid');
+    pg.innerHTML = state.projects.map(function(p){
+      return '<button class="project-card reveal" data-id="'+p.id+'" aria-label="Ver caso de estudio: '+esc(p.title)+'">'+
+        '<div class="project-thumb"><img src="'+esc(p.cover)+'" alt="'+esc(p.title)+' — '+esc(p.category)+'" loading="lazy">'+
+        '<svg class="mark"><use href="#mark-svg"/></svg></div>'+
+        '<div class="project-meta"><h3>'+esc(p.title)+'</h3><span>'+esc(p.category)+'</span></div>'+
+      '</button>';
+    }).join('');
+
+    document.querySelectorAll('.project-card').forEach(function(btn){
+      btn.addEventListener('click', function(){ openLightbox(btn.getAttribute('data-id')); });
+    });
+
+    observeReveal();
+    renderAdminProjects();
+    setupDraggables();
+    applyPositions();
+  }
+
+  var DRAG_KEYS = ['heroEyebrow','heroTitle','heroSub','statementText','servEyebrow','servHeading','projEyebrow','projHeading','estudioEyebrow','estudioText','contactEyebrow','contactHeading','contactEmailLink','contactPhoneLink','contactLocation','footerLine'];
+
+  function setupDraggables(){
+    DRAG_KEYS.forEach(function(key){
+      var el = document.getElementById(key);
+      if(!el || el.hasAttribute('data-draggable')) return;
+      el.setAttribute('data-draggable','');
+      var startX, startY, origX, origY, dragged;
+
+      el.addEventListener('pointerdown', function(e){
+        if(!document.body.classList.contains('position-mode')) return;
+        e.preventDefault();
+        dragged = false;
+        el.setPointerCapture(e.pointerId);
+        startX = e.clientX; startY = e.clientY;
+        var pos = state.positions[key] || {x:0,y:0};
+        origX = pos.x; origY = pos.y;
+        el.classList.add('dragging');
+      });
+      el.addEventListener('pointermove', function(e){
+        if(!document.body.classList.contains('position-mode') || startX===undefined || !el.classList.contains('dragging')) return;
+        var dx = e.clientX - startX, dy = e.clientY - startY;
+        if(Math.abs(dx)>2 || Math.abs(dy)>2) dragged = true;
+        el.style.transform = 'translate('+(origX+dx)+'px,'+(origY+dy)+'px)';
+      });
+      el.addEventListener('pointerup', function(e){
+        if(!el.classList.contains('dragging')) return;
+        el.classList.remove('dragging');
+        var dx = e.clientX - startX, dy = e.clientY - startY;
+        state.positions[key] = {x: origX+dx, y: origY+dy};
+        startX = undefined;
+        if(dragged) saveState('Posición guardada');
+      });
+      el.addEventListener('click', function(e){
+        if(document.body.classList.contains('position-mode') && dragged){ e.preventDefault(); }
+      });
+    });
+  }
+
+  function applyPositions(){
+    DRAG_KEYS.forEach(function(key){
+      var el = document.getElementById(key);
+      var pos = state.positions[key];
+      if(el){ el.style.transform = pos ? 'translate('+pos.x+'px,'+pos.y+'px)' : ''; }
+    });
+  }
+
+  function openLightbox(id){
+    var p = state.projects.find(function(x){ return x.id===id; });
+    if(!p) return;
+    var gal = (p.gallery||'').split(',').map(function(s){return s.trim();}).filter(Boolean);
+    var html = '<div class="lb-cover"><img src="'+esc(p.cover)+'" alt="'+esc(p.title)+'"></div>'+
+      '<span class="eyebrow">'+esc(p.category)+' · '+esc(p.year||'')+'</span>'+
+      '<h2>'+esc(p.title)+'</h2><p>'+esc(p.desc)+'</p>';
+    if(gal.length){
+      html += '<div class="lb-gallery">'+gal.map(function(g){return '<img src="'+esc(g)+'" alt="'+esc(p.title)+' — detalle" loading="lazy">';}).join('')+'</div>';
+    }
+    document.getElementById('lbContent').innerHTML = html;
+    var lb = document.getElementById('lightbox');
+    lb.classList.add('open');
+    document.getElementById('lbClose').focus();
+    document.body.style.overflow='hidden';
+  }
+  document.getElementById('lbClose').addEventListener('click', closeLightbox);
+  document.getElementById('lightbox').addEventListener('click', function(e){ if(e.target.id==='lightbox') closeLightbox(); });
+  function closeLightbox(){
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow='';
+  }
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape'){ closeLightbox(); closeAdmin(); closeMenu(); }
+  });
+
+  function observeReveal(){
+    var els = document.querySelectorAll('.reveal:not(.in)');
+    if(!('IntersectionObserver' in window)){ els.forEach(function(e){ e.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, {threshold:.15});
+    els.forEach(function(e){ io.observe(e); });
+  }
+
+  // mobile menu
+  var menuBtn = document.getElementById('menuBtn');
+  var mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', function(){
+    var open = mobileMenu.classList.toggle('open');
+    menuBtn.classList.toggle('open', open);
+    menuBtn.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  function closeMenu(){
+    mobileMenu.classList.remove('open'); menuBtn.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded','false'); document.body.style.overflow='';
+  }
+  document.querySelectorAll('[data-close]').forEach(function(a){ a.addEventListener('click', closeMenu); });
+
+  // hero load + mark draw
+  window.addEventListener('load', function(){
+    document.getElementById('hero').classList.add('loaded');
+    document.querySelectorAll('.brand-lockup .mark').forEach(function(m){ m.classList.add('draw'); });
+  });
+
+  // contact form
+  document.getElementById('contactForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = document.getElementById('cf-name').value.trim();
+    var email = document.getElementById('cf-email').value.trim();
+    var msg = document.getElementById('cf-msg').value.trim();
+    var body = encodeURIComponent('Nombre: '+name+'\nCorreo: '+email+'\n\n'+msg);
+    window.location.href = 'mailto:'+state.contactEmail+'?subject=Nuevo%20proyecto%20desde%20el%20sitio&body='+body;
+  });
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ---------- POSITION MODE ----------
+  var posBar = document.getElementById('posBar');
+  document.getElementById('positionTrigger').addEventListener('click', function(){
+    document.body.classList.add('position-mode');
+    posBar.classList.add('show');
+  });
+  document.getElementById('exitPositionMode').addEventListener('click', function(){
+    document.body.classList.remove('position-mode');
+    posBar.classList.remove('show');
+  });
+  document.getElementById('resetPositions').addEventListener('click', function(){
+    if(!confirm('¿Restablecer todos los textos a su posición original?')) return;
+    state.positions = {};
+    applyPositions();
+    saveState('Posiciones restablecidas');
+  });
+
+  // ---------- ADMIN ----------
+  var adminPanel = document.getElementById('adminPanel');
+  document.getElementById('adminTrigger').addEventListener('click', openAdmin);
+  document.getElementById('adminClose').addEventListener('click', closeAdmin);
+  function openAdmin(){
+    document.getElementById('f-heroEyebrow').value = state.heroEyebrow;
+    document.getElementById('f-heroTitle').value = state.heroTitle;
+    document.getElementById('f-heroSub').value = state.heroSub;
+    document.getElementById('f-heroImg').value = state.heroImg;
+    document.getElementById('f-statement').value = state.statement;
+    document.getElementById('f-servEyebrow').value = state.servEyebrow;
+    document.getElementById('f-servHeading').value = state.servHeading;
+    document.getElementById('f-projEyebrow').value = state.projEyebrow;
+    document.getElementById('f-projHeading').value = state.projHeading;
+    document.getElementById('f-estudioEyebrow').value = state.estudioEyebrow;
+    document.getElementById('f-estudio').value = state.estudio;
+    document.getElementById('f-contactEyebrow').value = state.contactEyebrow;
+    document.getElementById('f-contactHeading').value = state.contactHeading;
+    document.getElementById('f-contactEmail').value = state.contactEmail;
+    document.getElementById('f-contactPhone').value = state.contactPhone;
+    document.getElementById('f-contactPhoneDisplay').value = state.contactPhoneDisplay;
+    document.getElementById('f-contactLocation').value = state.contactLocation;
+    document.getElementById('f-footerLine').value = state.footerLine;
+    fillDesignInputs();
+    adminPanel.classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeAdmin(){ adminPanel.classList.remove('open'); document.body.style.overflow=''; }
+
+  document.querySelectorAll('.admin-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      document.querySelectorAll('.admin-tab').forEach(function(t){ t.classList.remove('active'); });
+      document.querySelectorAll('.admin-section').forEach(function(s){ s.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById('tab-'+tab.getAttribute('data-tab')).classList.add('active');
+    });
+  });
+
+  // ---------- DISEÑO TAB ----------
+  var designInputs = {
+    bg:document.getElementById('d-bg'), bg2:document.getElementById('d-bg2'),
+    text:document.getElementById('d-text'), textSoft:document.getElementById('d-textsoft'),
+    line:document.getElementById('d-line'),
+    brass:document.getElementById('d-brass'), brassSoft:document.getElementById('d-brasssoft'),
+    darkBg:document.getElementById('d-darkbg'), darkText:document.getElementById('d-darktext'),
+    darkTextSoft:document.getElementById('d-darktextsoft')
+  };
+  var dFont = document.getElementById('d-font'), fontScaleOut = document.getElementById('fontScaleOut');
+
+  function fillDesignInputs(){
+    Object.keys(designInputs).forEach(function(k){ designInputs[k].value = state.design[k]; });
+    dFont.value = state.design.fontScale;
+    fontScaleOut.textContent = Math.round(state.design.fontScale*100)+'%';
+  }
+  function livePreviewDesign(){
+    Object.keys(designInputs).forEach(function(k){ state.design[k] = designInputs[k].value; });
+    state.design.fontScale = parseFloat(dFont.value);
+    fontScaleOut.textContent = Math.round(state.design.fontScale*100)+'%';
+    applyDesign();
+  }
+  Object.keys(designInputs).forEach(function(k){ designInputs[k].addEventListener('input', livePreviewDesign); });
+  dFont.addEventListener('input', livePreviewDesign);
+
+  document.getElementById('saveDiseno').addEventListener('click', function(){
+    saveState('Diseño guardado');
+  });
+  document.getElementById('resetDiseno').addEventListener('click', function(){
+    state.design = JSON.parse(JSON.stringify(DEFAULTS.design));
+    applyDesign();
+    fillDesignInputs();
+    saveState('Diseño restablecido');
+  });
+
+  document.getElementById('saveTextos').addEventListener('click', function(){
+    state.heroEyebrow = document.getElementById('f-heroEyebrow').value.trim() || DEFAULTS.heroEyebrow;
+    state.heroTitle = document.getElementById('f-heroTitle').value.trim() || DEFAULTS.heroTitle;
+    state.heroSub = document.getElementById('f-heroSub').value.trim() || DEFAULTS.heroSub;
+    state.heroImg = document.getElementById('f-heroImg').value.trim() || DEFAULTS.heroImg;
+    state.statement = document.getElementById('f-statement').value.trim() || DEFAULTS.statement;
+    state.servEyebrow = document.getElementById('f-servEyebrow').value.trim() || DEFAULTS.servEyebrow;
+    state.servHeading = document.getElementById('f-servHeading').value.trim() || DEFAULTS.servHeading;
+    state.projEyebrow = document.getElementById('f-projEyebrow').value.trim() || DEFAULTS.projEyebrow;
+    state.projHeading = document.getElementById('f-projHeading').value.trim() || DEFAULTS.projHeading;
+    state.estudioEyebrow = document.getElementById('f-estudioEyebrow').value.trim() || DEFAULTS.estudioEyebrow;
+    state.estudio = document.getElementById('f-estudio').value.trim() || DEFAULTS.estudio;
+    state.contactEyebrow = document.getElementById('f-contactEyebrow').value.trim() || DEFAULTS.contactEyebrow;
+    state.contactHeading = document.getElementById('f-contactHeading').value.trim() || DEFAULTS.contactHeading;
+    state.contactEmail = document.getElementById('f-contactEmail').value.trim() || DEFAULTS.contactEmail;
+    state.contactPhone = document.getElementById('f-contactPhone').value.trim() || DEFAULTS.contactPhone;
+    state.contactPhoneDisplay = document.getElementById('f-contactPhoneDisplay').value.trim() || DEFAULTS.contactPhoneDisplay;
+    state.contactLocation = document.getElementById('f-contactLocation').value.trim() || DEFAULTS.contactLocation;
+    state.footerLine = document.getElementById('f-footerLine').value.trim() || DEFAULTS.footerLine;
+    render();
+    saveState('Textos guardados');
+  });
+
+  function renderAdminProjects(){
+    var list = document.getElementById('projectAdminList');
+    list.innerHTML = state.projects.map(function(p){
+      return '<div class="admin-card" data-id="'+p.id+'">'+
+        '<h4>'+esc(p.title)+'</h4><div class="meta">'+esc(p.category)+' · '+esc(p.year||'')+'</div>'+
+        '<div class="afield"><label>Título</label><input class="pf-title" value="'+esc(p.title)+'"></div>'+
+        '<div class="afield"><label>Categoría</label><input class="pf-category" value="'+esc(p.category)+'"></div>'+
+        '<div class="afield"><label>Año</label><input class="pf-year" value="'+esc(p.year||'')+'"></div>'+
+        '<div class="afield"><label>Imagen de portada (URL)</label><input class="pf-cover" value="'+esc(p.cover)+'"></div>'+
+        '<div class="afield"><label>Descripción</label><textarea class="pf-desc">'+esc(p.desc)+'</textarea></div>'+
+        '<div class="afield"><label>Galería (URLs separadas por coma, opcional)</label><textarea class="pf-gallery">'+esc(p.gallery||'')+'</textarea></div>'+
+        '<button class="abtn primary pf-save">Guardar proyecto</button>'+
+        '<button class="abtn danger pf-delete">Eliminar</button>'+
+      '</div>';
+    }).join('');
+
+    list.querySelectorAll('.admin-card').forEach(function(card){
+      var id = card.getAttribute('data-id');
+      card.querySelector('.pf-save').addEventListener('click', function(){
+        var p = state.projects.find(function(x){ return x.id===id; });
+        p.title = card.querySelector('.pf-title').value.trim() || p.title;
+        p.category = card.querySelector('.pf-category').value.trim();
+        p.year = card.querySelector('.pf-year').value.trim();
+        p.cover = card.querySelector('.pf-cover').value.trim() || p.cover;
+        p.desc = card.querySelector('.pf-desc').value.trim();
+        p.gallery = card.querySelector('.pf-gallery').value.trim();
+        render();
+        saveState('Proyecto actualizado');
+      });
+      card.querySelector('.pf-delete').addEventListener('click', function(){
+        if(!confirm('¿Eliminar este proyecto?')) return;
+        state.projects = state.projects.filter(function(x){ return x.id!==id; });
+        render();
+        saveState('Proyecto eliminado');
+      });
+    });
+  }
+
+  document.getElementById('addProject').addEventListener('click', function(){
+    state.projects.unshift({
+      id: uid(), title:'Nuevo proyecto', category:'Residencial · Render', year: String(new Date().getFullYear()),
+      cover:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1400&auto=format&fit=crop',
+      desc:'Describe aquí el proyecto.', gallery:''
+    });
+    render();
+    saveState('Proyecto agregado');
+  });
+
+  loadState();
+})();
+</script>
+</body>
+</html>
