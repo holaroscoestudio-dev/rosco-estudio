@@ -556,28 +556,30 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
 (function(){
   var DEFAULTS = {
     heroEyebrow: "Rosco Estudio — Ciudad de México",
-    heroTitle: "El espacio, visible antes de construirlo.",
+    heroTitle: "Diseñar es decidir con los ojos.",
     heroSub: "RENDERIZADO · PLANOS · CONCEPTUALIZACIÓN · RECORRIDOS VIRTUALES",
     heroImg: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1800&auto=format&fit=crop",
-    statement: "No vendemos imágenes bonitas. Ayudamos a decidir. Cada render, plano y recorrido existe para que veas tu proyecto antes de construirlo.",
+    statement: "No diseñamos imágenes para impresionar. Diseñamos herramientas para decidir. Cada render, plano y recorrido te permite experimentar tu proyecto antes de construirlo.\n\nEn la construcción cuesta caro equivocarse. Por eso, primero se ve.",
     servEyebrow: "Servicios",
-    servHeading: "Lo que hacemos, de la idea al anteproyecto completo",
+    servHeading: "Pasa. No hay dos casos iguales.",
     projEyebrow: "Proyectos",
     projHeading: "Una selección, no un catálogo",
     estudioEyebrow: "Estudio",
-    estudio: "Rosco Estudio es el estudio personal de Luis Roberto Málaga, arquitecto en Ciudad de México.\nTrabajo con modelado BIM, visualización fotorrealista y coordinación de proyecto, aplicados a vivienda residencial y hospitalidad de lujo.\nCada encargo se trata como un caso de estudio: pocos proyectos, mucho cuidado.",
+    estudio: "Rosco Estudio es un estudio de arquitectura y visualización dedicado al desarrollo de proyectos contemporáneos.\n\nEntendemos la representación arquitectónica no como una imagen final, sino como una herramienta para pensar, validar y comunicar el proyecto antes de su materialización.\n\nCada encargo se aborda como un caso de estudio: una selección limitada de proyectos, atención meticulosa al detalle y un enfoque centrado en la claridad, la funcionalidad y la permanencia.",
     contactEyebrow: "Contacto",
-    contactHeading: "Hablemos de tu proyecto",
+    contactHeading: "Toda gran arquitectura comienza con una conversación.",
     contactEmail: "holaroscoestudio@gmail.com",
     contactPhone: "5526995348",
     contactPhoneDisplay: "55 2699 5348",
     contactLocation: "Ciudad de México, México",
     whatsappMessage: "Hola, me gustaría platicar sobre un proyecto arquitectónico.",
     footerLine: "ROSCO ESTUDIO — ARQUITECTURA · DISEÑO · VISUALIZACIÓN",
-    positions: {},
+    positions: {
+      statementText: { x: 634, y: 8 }
+    },
     design: {
-      bg:"#C7C0AC", bg2:"#B9B19A",
-      text:"#221F18", textSoft:"#4A4436", line:"#A79C82",
+      bg:"#C5BFAA", bg2:"#B9B19A",
+      text:"#221F18", textSoft:"#4A4436", line:"#BA8712",
       brass:"#8A6A3E", brassSoft:"#A98F62",
       darkBg:"#221F18", darkText:"#F4F0E6", darkTextSoft:"#9C9586",
       fontScale:1
@@ -592,21 +594,24 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
     projects: [
       {
         title:"Casa Sayavedra", category:"Residencial · Render", year:"2026",
-        cover:"https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1400&auto=format&fit=crop",
+        cover:"https://i.imgur.com/yNnMwEY.jpeg",
         desc:"Ampliación residencial de tres niveles para una vivienda familiar, con bodega de vinos, sala de cata, jardín interior y biblioteca. Desarrollo completo de visualización fotorrealista para acompañar el proceso de obra.",
-        gallery:"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1000&auto=format&fit=crop,https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=1000&auto=format&fit=crop"
+        gallery:"https://i.imgur.com/x9uggIY.jpeg,https://i.imgur.com/0au28Lz.jpeg",
+        id:"p1783633629155592"
       },
       {
-        title:"Loft Tlalpan", category:"Vivienda · Anteproyecto", year:"2025",
-        cover:"https://images.unsplash.com/photo-1556912173-3bb406ef7e77?q=80&w=1400&auto=format&fit=crop",
-        desc:"Conceptualización de un loft de un solo nivel, con doble altura y materialidad cruda — concreto aparente, madera y metal. Programa compacto resuelto en planta abierta.",
-        gallery:"https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?q=80&w=1000&auto=format&fit=crop,https://images.unsplash.com/photo-1600585152220-90363fe7e115?q=80&w=1000&auto=format&fit=crop"
+        title:"Arrebol Tlalpan", category:"Departamentos · Anteproyecto", year:"2025",
+        cover:"https://i.imgur.com/gpzuTys.jpeg",
+        desc:"Desarrollo de un edificio residencial de mediana densidad, concebido mediante una composición volumétrica sobria y una materialidad cálida que combina piedra natural, madera y elementos metálicos. El proyecto busca generar espacios habitacionales eficientes, luminosos y vinculados visualmente con su contexto.",
+        gallery:"https://i.imgur.com/ikoD9Ir.jpeg,https://i.imgur.com/N5drgjg.jpeg",
+        id:"p1783633629155215"
       },
       {
-        title:"Residencia Lomas", category:"Hospitalidad · Recorrido virtual", year:"2025",
-        cover:"https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?q=80&w=1400&auto=format&fit=crop",
-        desc:"Recorrido virtual interactivo para una residencia de lujo, desarrollado para acompañar decisiones de diseño previas a obra junto al cliente y al equipo de interiorismo.",
-        gallery:"https://images.unsplash.com/photo-1600563438938-a42a4527cb45?q=80&w=1000&auto=format&fit=crop,https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=1000&auto=format&fit=crop"
+        title:"Bosco", category:"Centro Comercial · Conceptualización", year:"2025",
+        cover:"https://i.imgur.com/ocZ76Ef.jpeg",
+        desc:"Conceptualización de un centro comercial contemporáneo compuesto por pabellones modulares y una envolvente de alta transparencia. El proyecto integra arquitectura y paisaje para generar una experiencia comercial abierta, flexible y luminosa, donde el recorrido peatonal y la relación con el entorno se convierten en los principales elementos de diseño.",
+        gallery:"https://i.imgur.com/H663oPG.jpeg,https://i.imgur.com/SXB3qkT.jpeg",
+        id:"p1783633629155381"
       }
     ]
   };
