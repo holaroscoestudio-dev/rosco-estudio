@@ -127,7 +127,7 @@ header{
 .hero-media::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,color-mix(in srgb,var(--ink) 5%,transparent) 0%,color-mix(in srgb,var(--ink) 55%,transparent) 100%)}
 .hero-content{position:relative;color:var(--white);padding:0 0 64px}
 .hero-content .eyebrow{color:var(--brass-soft)}
-.hero-title{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:calc(var(--font-scale) * clamp(34px,7.5vw,76px));line-height:1.06;letter-spacing:-.01em;max-width:14ch;margin:18px 0 22px}
+.hero-title{font-family:'Fraunces',serif;font-style:italic;font-weight:400;font-size:calc(var(--font-scale) * clamp(34px,7.5vw,76px));line-height:1.06;letter-spacing:-.01em;max-width:14ch;margin:18px 0 22px;color:#FFFFFF}
 .hero-sub{font-family:'Jost',sans-serif;font-size:calc(var(--font-scale) * 13px);letter-spacing:.1em;max-width:40ch;color:#EDE7D8}
 .scroll-cue{position:absolute;bottom:24px;right:24px;color:var(--white);display:flex;flex-direction:column;align-items:center;gap:8px;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:.2em}
 .scroll-cue .line{width:1px;height:36px;background:rgba(255,255,255,.6);overflow:hidden}
@@ -272,6 +272,25 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
 .pos-bar.show{transform:translateX(-50%) translateY(0)}
 .pos-bar button{border:1px solid color-mix(in srgb,var(--dark-text) 30%,transparent);padding:7px 14px;color:var(--dark-text);font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.04em;white-space:nowrap}
 .pos-bar button:hover{border-color:var(--brass-soft);color:var(--brass-soft)}
+
+/* ---------- WHATSAPP FLOAT ---------- */
+.wa-float{
+  position:fixed;right:20px;bottom:20px;z-index:70;
+  width:56px;height:56px;border-radius:50%;
+  background:var(--dark-bg);color:var(--dark-text);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(0,0,0,.22);
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease),background .3s var(--ease),color .3s var(--ease);
+}
+.wa-float:hover,.wa-float:focus-visible{transform:scale(1.08);background:var(--brass);color:var(--dark-bg);box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.wa-tip{
+  position:absolute;right:68px;top:50%;transform:translateY(-50%) translateX(6px);
+  background:var(--dark-bg);color:var(--dark-text);font-family:'Jost',sans-serif;font-size:12px;letter-spacing:.04em;
+  padding:8px 14px;white-space:nowrap;opacity:0;pointer-events:none;
+  transition:opacity .3s var(--ease),transform .3s var(--ease);
+}
+.wa-float:hover .wa-tip,.wa-float:focus-visible .wa-tip{opacity:1;transform:translateY(-50%) translateX(0)}
+@media(max-width:600px){.wa-tip{display:none}.wa-float{width:52px;height:52px;right:16px;bottom:16px}}
 </style>
 </head>
 <body>
@@ -295,11 +314,12 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
       <span class="brand-name">ROSCO<small>ESTUDIO</small></span>
     </a>
     <ul class="nav-links">
-      <li><a href="#servicios">Servicios</a></li>
-      <li><a href="#proyectos">Proyectos</a></li>
-      <li><a href="#estudio">Estudio</a></li>
-      <li><a href="#contacto">Contacto</a></li>
+      <li><a href="#servicios" data-i18n="navServicios">Servicios</a></li>
+      <li><a href="#proyectos" data-i18n="navProyectos">Proyectos</a></li>
+      <li><a href="#estudio" data-i18n="navEstudio">Estudio</a></li>
+      <li><a href="#contacto" data-i18n="navContacto">Contacto</a></li>
     </ul>
+    <button class="lang-toggle" id="langToggle" aria-label="Cambiar a inglés / Switch to English">EN</button>
     <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
       <span></span><span></span><span></span>
     </button>
@@ -373,6 +393,8 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
           <a href="mailto:holaroscoestudio@gmail.com" id="contactEmailLink">holaroscoestudio@gmail.com</a>
           <span class="label" style="margin-top:14px">Teléfono</span>
           <a href="tel:+525526995348" id="contactPhoneLink">55 2699 5348</a>
+          <span class="label" style="margin-top:14px">WhatsApp</span>
+          <a href="#" id="contactWhatsappLink" target="_blank" rel="noopener">Escríbeme directo</a>
           <span class="label" style="margin-top:14px">Ubicación</span>
           <span id="contactLocation">Ciudad de México, México</span>
         </div>
@@ -396,6 +418,11 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
   </section>
 
 </main>
+
+<a class="wa-float" id="waFloat" href="#" target="_blank" rel="noopener" aria-label="Escríbeme por WhatsApp">
+  <svg viewBox="0 0 32 32" width="24" height="24" fill="currentColor" aria-hidden="true"><path d="M16.02 3C9.4 3 4 8.4 4 15.02c0 2.25.62 4.36 1.7 6.17L4 29l7.98-1.66a11.9 11.9 0 0 0 4.04.7h.01c6.62 0 12.02-5.4 12.02-12.02C28.05 8.4 22.65 3 16.02 3zm7.03 17.06c-.3.83-1.72 1.58-2.37 1.68-.6.1-1.36.14-2.2-.14-.5-.16-1.15-.38-1.98-.75-3.48-1.5-5.75-5-5.93-5.24-.17-.24-1.42-1.89-1.42-3.6 0-1.72.9-2.56 1.22-2.91.32-.35.7-.44.93-.44.24 0 .47 0 .68.01.22.01.51-.08.8.61.3.72 1.02 2.48 1.11 2.66.09.18.15.39.03.63-.12.24-.18.39-.36.6-.18.21-.38.47-.54.63-.18.18-.37.37-.16.73.21.36.94 1.55 2.02 2.51 1.39 1.24 2.56 1.62 2.93 1.8.36.18.57.15.79-.09.21-.24.9-1.05 1.14-1.41.24-.36.48-.3.8-.18.32.12 2.06.97 2.42 1.15.36.18.6.27.68.42.09.15.09.85-.21 1.68z"/></svg>
+  <span class="wa-tip">Escríbeme por WhatsApp</span>
+</a>
 
 <footer>
   <div class="wrap foot-row">
@@ -488,6 +515,7 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
       <div class="afield"><label>Teléfono (con lada, solo números para el enlace)</label><input id="f-contactPhone"><small>Ejemplo: 5526995348 — se usará para el enlace de llamada.</small></div>
       <div class="afield"><label>Teléfono (texto a mostrar)</label><input id="f-contactPhoneDisplay"></div>
       <div class="afield"><label>Ubicación</label><input id="f-contactLocation"></div>
+      <div class="afield"><label>Mensaje predeterminado de WhatsApp</label><textarea id="f-whatsappMessage"></textarea><small>Este texto aparece ya escrito cuando alguien te contacta desde el botón de WhatsApp.</small></div>
 
       <p class="eyebrow" style="display:block;margin:24px 0 12px">Pie de página</p>
       <div class="afield"><label>Línea de crédito</label><input id="f-footerLine"></div>
@@ -502,9 +530,21 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
 
     <div class="admin-section" id="tab-ayuda">
       <h3 class="serif" style="font-size:20px;margin-bottom:12px">Cómo actualizar el sitio</h3>
-      <p style="margin-bottom:12px;color:var(--ink-soft);max-width:60ch">Este panel guarda los cambios directamente en tu cuenta. Solo tú los ves al editar; los visitantes ven la última versión guardada.</p>
+      <p style="margin-bottom:12px;color:var(--ink-soft);max-width:60ch">Los cambios se guardan en el navegador que estás usando ahora mismo. Si editas desde tu laptop, esos cambios se ven en tu laptop; para que se vean igual para todos tus visitantes, usa "Exportar respaldo" abajo y compárteme ese texto — lo dejo fijo en el archivo del sitio.</p>
       <p style="margin-bottom:12px;color:var(--ink-soft);max-width:60ch"><strong>Imágenes:</strong> sube tus fotos o renders a un servicio de hosting (Google Drive con enlace público, Imgur, Cloudinary, etc.) y pega aquí el enlace directo a la imagen.</p>
-      <p style="color:var(--ink-soft);max-width:60ch"><strong>Proyectos:</strong> cada proyecto necesita un título, categoría, imagen de portada y descripción. La galería es opcional — pega varias URLs separadas por coma.</p>
+      <p style="margin-bottom:24px;color:var(--ink-soft);max-width:60ch"><strong>Proyectos:</strong> cada proyecto necesita un título, categoría, imagen de portada y descripción. La galería es opcional — pega varias URLs separadas por coma.</p>
+
+      <p class="eyebrow" style="display:block;margin-bottom:10px">Respaldo de contenido</p>
+      <div class="afield">
+        <button class="abtn primary" id="exportBackup" type="button">Exportar respaldo</button>
+        <small>Copia todo tu contenido, colores y posiciones actuales para guardarlo o compartirlo.</small>
+        <textarea id="backupOut" readonly style="min-height:100px;margin-top:10px;font-size:11px;font-family:monospace"></textarea>
+      </div>
+      <div class="afield">
+        <label>Restaurar desde un respaldo</label>
+        <textarea id="backupIn" placeholder="Pega aquí un respaldo exportado anteriormente" style="min-height:100px;font-size:11px;font-family:monospace"></textarea>
+        <button class="abtn" id="importBackup" type="button" style="margin-top:8px">Restaurar este respaldo</button>
+      </div>
     </div>
 
   </div>
@@ -532,6 +572,7 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
     contactPhone: "5526995348",
     contactPhoneDisplay: "55 2699 5348",
     contactLocation: "Ciudad de México, México",
+    whatsappMessage: "Hola, me gustaría platicar sobre un proyecto arquitectónico.",
     footerLine: "ROSCO ESTUDIO — ARQUITECTURA · DISEÑO · VISUALIZACIÓN",
     positions: {},
     design: {
@@ -574,11 +615,36 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
 
   function uid(){ return 'p' + Date.now() + Math.floor(Math.random()*999); }
 
+  // Storage adapter: uses Claude's window.storage when available (in-app preview),
+  // and falls back to the browser's localStorage once the file is hosted on its own domain.
+  async function storageGet(key){
+    try{
+      if(window.storage && typeof window.storage.get === 'function'){
+        var r = await window.storage.get(key, false);
+        if(r && r.value) return r.value;
+      }
+    }catch(e){}
+    try{
+      var v = localStorage.getItem('rosco:'+key);
+      return v===null ? null : v;
+    }catch(e){ return null; }
+  }
+  async function storageSet(key, value){
+    var ok = false;
+    try{
+      if(window.storage && typeof window.storage.set === 'function'){
+        var r = await window.storage.set(key, value, false);
+        if(r) ok = true;
+      }
+    }catch(e){}
+    try{ localStorage.setItem('rosco:'+key, value); ok = true; }catch(e){}
+    return ok;
+  }
+
   async function loadState(){
     try{
-      var r = await window.storage.get('site-content', false);
-      if(r && r.value){ state = JSON.parse(r.value); }
-      else { state = JSON.parse(JSON.stringify(DEFAULTS)); }
+      var v = await storageGet('site-content');
+      state = v ? JSON.parse(v) : JSON.parse(JSON.stringify(DEFAULTS));
     }catch(e){
       state = JSON.parse(JSON.stringify(DEFAULTS));
     }
@@ -606,12 +672,8 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
   }
 
   async function saveState(msg){
-    try{
-      await window.storage.set('site-content', JSON.stringify(state), false);
-      toast(msg || 'Guardado');
-    }catch(e){
-      toast('No se pudo guardar. Intenta de nuevo.');
-    }
+    var ok = await storageSet('site-content', JSON.stringify(state));
+    toast(ok ? (msg || 'Guardado') : 'No se pudo guardar. Intenta de nuevo.');
   }
 
   function toast(msg){
@@ -624,6 +686,12 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
 
   function esc(s){
     return (s||'').replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; });
+  }
+
+  function waHref(){
+    var digits = (state.contactPhone||'').replace(/\D/g,'');
+    var msg = encodeURIComponent(state.whatsappMessage || '');
+    return 'https://wa.me/52'+digits+(msg?('?text='+msg):'');
   }
 
   function render(){
@@ -648,6 +716,9 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
     var phoneLink = document.getElementById('contactPhoneLink');
     phoneLink.textContent = state.contactPhoneDisplay;
     phoneLink.href = 'tel:+52'+state.contactPhone.replace(/\D/g,'');
+    var waUrl = waHref();
+    document.getElementById('contactWhatsappLink').href = waUrl;
+    document.getElementById('waFloat').href = waUrl;
     document.getElementById('contactLocation').textContent = state.contactLocation;
     document.getElementById('footerLine').textContent = state.footerLine;
 
@@ -675,7 +746,7 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
     applyPositions();
   }
 
-  var DRAG_KEYS = ['heroEyebrow','heroTitle','heroSub','statementText','servEyebrow','servHeading','projEyebrow','projHeading','estudioEyebrow','estudioText','contactEyebrow','contactHeading','contactEmailLink','contactPhoneLink','contactLocation','footerLine'];
+  var DRAG_KEYS = ['heroEyebrow','heroTitle','heroSub','statementText','servEyebrow','servHeading','projEyebrow','projHeading','estudioEyebrow','estudioText','contactEyebrow','contactHeading','contactEmailLink','contactPhoneLink','contactWhatsappLink','contactLocation','footerLine'];
 
   function setupDraggables(){
     DRAG_KEYS.forEach(function(key){
@@ -792,11 +863,27 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
 
   document.getElementById('year').textContent = new Date().getFullYear();
 
+  // ---------- ADMIN ACCESS GATE ----------
+  var ADMIN_PASSWORD = "rosco2026"; // pídeme cambiarla cuando quieras
+  function checkAdminAccess(callback){
+    if(sessionStorage.getItem('rosco-admin-unlocked') === '1'){ callback(); return; }
+    var pass = prompt('Contraseña de administrador:');
+    if(pass === null) return;
+    if(pass === ADMIN_PASSWORD){
+      sessionStorage.setItem('rosco-admin-unlocked', '1');
+      callback();
+    } else {
+      toast('Contraseña incorrecta');
+    }
+  }
+
   // ---------- POSITION MODE ----------
   var posBar = document.getElementById('posBar');
   document.getElementById('positionTrigger').addEventListener('click', function(){
-    document.body.classList.add('position-mode');
-    posBar.classList.add('show');
+    checkAdminAccess(function(){
+      document.body.classList.add('position-mode');
+      posBar.classList.add('show');
+    });
   });
   document.getElementById('exitPositionMode').addEventListener('click', function(){
     document.body.classList.remove('position-mode');
@@ -809,9 +896,40 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
     saveState('Posiciones restablecidas');
   });
 
+  // ---------- BACKUP EXPORT / IMPORT ----------
+  document.getElementById('exportBackup').addEventListener('click', function(){
+    var json = JSON.stringify(state, null, 2);
+    var out = document.getElementById('backupOut');
+    out.value = json;
+    out.select();
+    try{
+      navigator.clipboard.writeText(json);
+      toast('Respaldo copiado al portapapeles');
+    }catch(e){
+      toast('Respaldo generado — cópialo manualmente');
+    }
+  });
+  document.getElementById('importBackup').addEventListener('click', function(){
+    var raw = document.getElementById('backupIn').value.trim();
+    if(!raw){ toast('Pega un respaldo primero'); return; }
+    try{
+      var parsed = JSON.parse(raw);
+      state = parsed;
+      state.projects = state.projects || [];
+      state.projects.forEach(function(p){ if(!p.id) p.id = uid(); });
+      state.design = Object.assign({}, DEFAULTS.design, state.design||{});
+      state.positions = Object.assign({}, state.positions||{});
+      applyDesign();
+      render();
+      saveState('Respaldo restaurado');
+    }catch(e){
+      toast('Ese respaldo no es válido');
+    }
+  });
+
   // ---------- ADMIN ----------
   var adminPanel = document.getElementById('adminPanel');
-  document.getElementById('adminTrigger').addEventListener('click', openAdmin);
+  document.getElementById('adminTrigger').addEventListener('click', function(){ checkAdminAccess(openAdmin); });
   document.getElementById('adminClose').addEventListener('click', closeAdmin);
   function openAdmin(){
     document.getElementById('f-heroEyebrow').value = state.heroEyebrow;
@@ -831,6 +949,7 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
     document.getElementById('f-contactPhone').value = state.contactPhone;
     document.getElementById('f-contactPhoneDisplay').value = state.contactPhoneDisplay;
     document.getElementById('f-contactLocation').value = state.contactLocation;
+    document.getElementById('f-whatsappMessage').value = state.whatsappMessage;
     document.getElementById('f-footerLine').value = state.footerLine;
     fillDesignInputs();
     adminPanel.classList.add('open');
@@ -900,6 +1019,7 @@ body.position-mode [data-draggable]:hover{outline-color:var(--brass)}
     state.contactPhone = document.getElementById('f-contactPhone').value.trim() || DEFAULTS.contactPhone;
     state.contactPhoneDisplay = document.getElementById('f-contactPhoneDisplay').value.trim() || DEFAULTS.contactPhoneDisplay;
     state.contactLocation = document.getElementById('f-contactLocation').value.trim() || DEFAULTS.contactLocation;
+    state.whatsappMessage = document.getElementById('f-whatsappMessage').value.trim() || DEFAULTS.whatsappMessage;
     state.footerLine = document.getElementById('f-footerLine').value.trim() || DEFAULTS.footerLine;
     render();
     saveState('Textos guardados');
